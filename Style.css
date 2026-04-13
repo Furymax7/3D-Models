@@ -1,0 +1,200 @@
+/* --- Basic Setup --- */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
+hr {
+    border: 0;
+    border-top: 2px solid #eee;
+    margin: 40px 0;
+}
+
+/* ==========================================================================
+   INTERACTION 1, 2, & 5: Fancy Mask, Adjacent Sibling (+), Ghost Hitbox
+   ========================================================================== */
+
+/* 1. The Fancy Image Masking Effect */
+.photo-frame {
+    width: 400px;
+    height: 300px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden; /* Pro-tip: This creates the "window" mask */
+}
+
+/* Base state for the photo */
+.my-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Pro-tip: Only animating transform for 60fps performance */
+    transition: transform 0.4s ease-in-out; 
+}
+
+/* 2. State Change: Scale the photo on hover */
+.my-photo:hover {
+    transform: scale(1.05); /* Pro-tip: Scales without breaking layout */
+}
+
+/* Base state for the target details panel */
+.photo-details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    
+    /* Hiding it initially using opacity and moving it down 20px */
+    opacity: 0;
+    transform: translateY(20px);
+    
+    /* Smooth timing */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+    /* Pro-tip: The Invisible Hitbox! 
+       Prevents this invisible div from blocking the hover on the image */
+    pointer-events: none; 
+}
+
+/* 3. The Core Skill: Adjacent Sibling Selector (+) */
+/* When hovering the photo, target the details panel immediately next to it */
+.my-photo:hover + .photo-details {
+    opacity: 1;
+    transform: translateY(0); /* Slides up to normal position */
+}
+
+
+/* ==========================================================================
+   INTERACTION 3: General Sibling Drawer (~)
+   ========================================================================== */
+
+.drawer-trigger {
+    background: #007bff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.filler-text {
+    color: #888;
+    text-align: center;
+}
+
+/* Base state for the secret drawer */
+.secret-drawer {
+    background: #28a745;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    
+    /* Hidden state */
+    opacity: 0;
+    transform: scale(0.9);
+    transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    pointer-events: none;
+}
+
+/* The Core Skill: General Sibling Selector (~) */
+/* Targets the drawer even though there are filler paragraphs in between */
+.drawer-trigger:hover ~ .secret-drawer {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+
+/* ==========================================================================
+   INTERACTION 4: Motion & Keyframes
+   ========================================================================== */
+
+.bounce-trigger {
+    display: inline-block;
+    background: #6f42c1;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.bounce-target {
+    display: inline-block;
+    margin-left: 20px;
+    background: #ffc107;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Adjacent sibling combined with @keyframes */
+.bounce-trigger:hover + .bounce-target {
+    /* Triggers the custom animation defined below */
+    animation: gentle-bounce 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes gentle-bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-15px);
+    }
+}
+
+
+/* ==========================================================================
+   INTERACTION 5: Easing and Momentum
+   ========================================================================== */
+
+.race-track {
+    background: #e9ecef;
+    padding: 20px;
+    border-radius: 5px;
+    border: 2px dashed #ccc;
+    cursor: pointer;
+}
+
+.box {
+    width: 150px;
+    padding: 10px;
+    margin: 10px 0;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.box-linear {
+    background: #dc3545;
+    /* Pro-tip: Robotic, constant speed */
+    transition: transform 1s linear; 
+}
+
+.box-fluid {
+    background: #17a2b8;
+    /* Pro-tip: Fluid, physical weight */
+    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1); 
+}
+
+/* Triggering both boxes to move when the parent track is hovered */
+.race-track:hover .box-linear,
+.race-track:hover .box-fluid {
+    transform: translateX(400px);
+}
